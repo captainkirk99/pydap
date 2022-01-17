@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip3 install -U pip setuptools
-          pip3 install -U numpy webtest gsw
+          pip3 install -U numpy webtest gsw coards
           pip3 install -U netCDF4 pytest numpy Webob Jinja2 docopt six beautifulsoup4 requests testresources
       - name: Run tests with pytest
         run: |
