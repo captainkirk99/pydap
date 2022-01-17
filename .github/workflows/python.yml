@@ -19,7 +19,9 @@ jobs:
       - name: Install dependencies
         run: |
           pip3 install -U pip setuptools
-          pip3 install -U numpy
+          pip3 install -U numpy webtest
           pip3 install -U netCDF4 pytest numpy Webob Jinja2 docopt six beautifulsoup4 requests testresources
       - name: Run tests with pytest
-        run: pytest -k parsers
+        run: |
+          pip install -e .[tests,netcdf,client]
+          pytest -k client
