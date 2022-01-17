@@ -49,22 +49,26 @@ class DAPHandler(BaseHandler):
                  timeout=DEFAULT_TIMEOUT, verify=True, user_charset='ascii'):
         # download DDS/DAS
         scheme, netloc, path, query, fragment = urlsplit(url)
+        use_dap4 = False
 
-        ddsurl = urlunsplit((scheme, netloc, path + '.dds', query, fragment))
-        r = GET(ddsurl, application, session, timeout=timeout,
-                verify=verify)
-        raise_for_status(r)
-        dds = safe_charset_text(r, user_charset)
+        if (use_dap4):
+            print("using dap4")
+        else:
+           ddsurl = urlunsplit((scheme, netloc, path + '.dds', query, fragment))
+           r = GET(ddsurl, application, session, timeout=timeout,
+                   verify=verify)
+           raise_for_status(r)
+           dds = safe_charset_text(r, user_charset)
 
-        dasurl = urlunsplit((scheme, netloc, path + '.das', query, fragment))
-        r = GET(dasurl, application, session, timeout=timeout,
-                verify=verify)
-        raise_for_status(r)
-        das = safe_charset_text(r, user_charset)
+           dasurl = urlunsplit((scheme, netloc, path + '.das', query, fragment))
+           r = GET(dasurl, application, session, timeout=timeout,
+                   verify=verify)
+           raise_for_status(r)
+           das = safe_charset_text(r, user_charset)
 
-        # build the dataset from the DDS and add attributes from the DAS
-        self.dataset = build_dataset(dds)
-        add_attributes(self.dataset, parse_das(das))
+           # build the dataset from the DDS and add attributes from the DAS
+           self.dataset = build_dataset(dds)
+           add_attributes(self.dataset, parse_das(das))
 
         # remove any projection from the url, leaving selections
         projection, selection = parse_ce(query)
@@ -154,7 +158,7 @@ class BaseProxy(object):
             map(repr, [
                 self.baseurl, self.id, self.dtype, self.shape, self.slice]))
 
-    def __getitem__(self, index, user_charset):
+    def __getitem__(self, index):
         # build download url
         index = combine_slices(self.slice, fix_slice(index, self.shape))
         scheme, netloc, path, query, fragment = urlsplit(self.baseurl)
@@ -168,7 +172,7 @@ class BaseProxy(object):
         r = GET(url, self.application, self.session, timeout=self.timeout,
                 verify=self.verify)
         raise_for_status(r)
-        dds, data = safe_dds_and_data(r, user_charset)
+        dds, data = safe_dds_and_data(r, self.user_charset)
 
         # Parse received dataset:
         dataset = build_dataset(dds)
