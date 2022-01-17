@@ -75,6 +75,7 @@ def test_netcdf(sequence_type_data):
 
 
 @server
+@pytest.mark.skip
 def test_timeout(sequence_type_data):
     """Test that timeout works properly"""
     TestDataset = DatasetType('Test')
