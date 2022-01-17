@@ -24,4 +24,4 @@ jobs:
       - name: Run tests with pytest
         run: |
           pip install -e .[tests,netcdf,client]
-          pytest -k client
+          pytest 
