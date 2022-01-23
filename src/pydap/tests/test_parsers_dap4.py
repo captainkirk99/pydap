@@ -246,6 +246,7 @@ class TestParseDMR(unittest.TestCase):
     def test_coads_climatology2(self):
         """Test a single scalar case."""
         self.dataset = build_dataset(DMR_coads_climatology2)
+#        import pdb; pdb.set_trace()        
         # for v in self.dataset:
         #     print("dataset has " + v)
 #        self.assertEqual(self.dataset.attributes, {})

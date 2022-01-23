@@ -172,6 +172,7 @@ def build_dataset(dmr):
             print("\tDim name " + var_dim.getAttribute("name") + " size " + var_dim.getAttribute("size"))
             for var_att in float64.getElementsByTagName("Attribute"):
                 print("\tAtt name " + var_att.getAttribute("name") + " type " + var_att.getAttribute("type"))
+                print("\tAtt value " + var_att.getElementsByTagName("Value")[0].childNodes[0].nodeValue)
 
     # Create and fill in the pydap data model.
     dataset = DatasetType('nameless')
@@ -198,7 +199,7 @@ def build_dataset(dmr):
                 var_dim_name = var_dim.getAttribute("name")[var_dim.getAttribute("name").rindex("/") + 1:]
                 var[var_dim_name] = BaseType(var_dim_name, data)
             for var_att in dmr_var.getElementsByTagName("Attribute"):
-                var.attributes[var_att.getAttribute("name")] = {}
+                var.attributes[var_att.getAttribute("name")] = var_att.getElementsByTagName("Value")[0].childNodes[0].nodeValue
             dataset[var.name] = var            
 
 #    ints = doc.getElementsByTagName("Int32")
