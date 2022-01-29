@@ -151,7 +151,7 @@ class DMRParser():
     #     return grid
 
 
-def build_dataset(dmr):
+def build_dataset_dmr(dmr):
     """Return a dataset object from a DMR representation."""
 
     # Parse the DMR.

@@ -32,6 +32,7 @@ from ..lib import (
 from .lib import ConstraintExpression, BaseHandler, IterData
 from ..parsers.dds import build_dataset
 from ..parsers.das import parse_das, add_attributes
+from ..parsers.dmr import build_dataset_dmr
 from ..parsers import parse_ce
 from ..responses.dods import DAP2_response_dtypemap
 logger = logging.getLogger('pydap')
@@ -49,10 +50,18 @@ class DAPHandler(BaseHandler):
                  timeout=DEFAULT_TIMEOUT, verify=True, user_charset='ascii'):
         # download DDS/DAS
         scheme, netloc, path, query, fragment = urlsplit(url)
-        use_dap4 = False
 
-        if (use_dap4):
-            print("using dap4")
+#        import pdb; pdb.set_trace()
+        if (scheme == 'dap4'):
+           scheme = 'http'
+           
+           dmrurl = urlunsplit((scheme, netloc, path + '.dmr.xml', query, fragment))
+           r = GET(dmrurl, application, session, timeout=timeout, verify=verify)
+           raise_for_status(r)
+           dmr = safe_charset_text(r, user_charset)
+           
+           # build the dataset from the DMR.
+           self.dataset = build_dataset_dmr(dmr)
         else:
            ddsurl = urlunsplit((scheme, netloc, path + '.dds', query, fragment))
            r = GET(ddsurl, application, session, timeout=timeout,
